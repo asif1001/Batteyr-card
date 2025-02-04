@@ -21,6 +21,7 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             display: inline-block;
             text-align: left;
+            width: 300px;
         }
         input, button {
             width: 100%;
@@ -36,6 +37,10 @@
         }
         button:hover {
             background-color: #218838;
+        }
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -53,6 +58,8 @@
         <button type="submit">Upload</button>
     </form>
 
+    <p id="message"></p>
+
     <script>
         document.getElementById("uploadForm").onsubmit = async function(event) {
             event.preventDefault();
@@ -60,9 +67,11 @@
             let dealerName = document.getElementById("dealerName").value;
             let fileInput = document.getElementById("pdfFile");
             let file = fileInput.files[0];
+            let message = document.getElementById("message");
 
             if (!file) {
-                alert("Please select a PDF file.");
+                message.style.color = "red";
+                message.innerText = "❌ Please select a PDF file.";
                 return;
             }
 
@@ -70,8 +79,11 @@
             formData.append("dealerName", dealerName);
             formData.append("pdfFile", file);
 
-            // Replace with your Google Apps Script or API URL
-            let apiUrl = "YOUR_GOOGLE_APPS_SCRIPT_URL";
+            // ✅ Replace with your Google Apps Script Web App URL
+            let apiUrl = "https://script.google.com/macros/s/AKfycbyov1jOTFucEyURpiVdh3DuQ_BEPejMm1jcztRSM9ZTqUNIziYJ7BbyC3z5qGIK-BeI/exec";
+
+            message.style.color = "blue";
+            message.innerText = "⏳ Uploading... Please wait.";
 
             fetch(apiUrl, {
                 method: "POST",
@@ -79,13 +91,15 @@
             })
             .then(response => response.text())
             .then(data => {
-                alert("File uploaded successfully!");
+                message.style.color = "green";
+                message.innerText = "✅ File uploaded successfully!";
                 fileInput.value = ""; // Reset file input
                 document.getElementById("dealerName").value = ""; // Reset dealer name
             })
             .catch(error => {
                 console.error("Error uploading file:", error);
-                alert("Error uploading file!");
+                message.style.color = "red";
+                message.innerText = "❌ Error uploading file!";
             });
         };
     </script>
