@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Invoice PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+        }
+        input, button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Dealer Invoice Upload</h2>
+    
+    <form id="uploadForm">
+        <label>Dealer Name:</label>
+        <input type="text" id="dealerName" placeholder="Enter Dealer Name" required>
+        
+        <label>Upload PDF:</label>
+        <input type="file" id="pdfFile" accept="application/pdf" required>
+        
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        document.getElementById("uploadForm").onsubmit = async function(event) {
+            event.preventDefault();
+            
+            let dealerName = document.getElementById("dealerName").value;
+            let fileInput = document.getElementById("pdfFile");
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a PDF file.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("dealerName", dealerName);
+            formData.append("pdfFile", file);
+
+            // Replace with your Google Apps Script or API URL
+            let apiUrl = "YOUR_GOOGLE_APPS_SCRIPT_URL";
+
+            fetch(apiUrl, {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("File uploaded successfully!");
+                fileInput.value = ""; // Reset file input
+                document.getElementById("dealerName").value = ""; // Reset dealer name
+            })
+            .catch(error => {
+                console.error("Error uploading file:", error);
+                alert("Error uploading file!");
+            });
+        };
+    </script>
+
+</body>
+</html>
